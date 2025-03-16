@@ -8,15 +8,15 @@ PROJECT: productsAPI;
 // ---------- DEBUG ----------
 const debug = false;
 
-const express = require("express");
+import express from "express";
 const app = express()
 const port = 3001
-const productQueries = require("./ProductQueries.tsx")
+import productQueries from './productqueries.js';
 
 app.use(express.json())
 app.use(function (req, res, next) {
     const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
-    const origin = req.headers.origin;
+    const origin = req.headers.origin || "";
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }

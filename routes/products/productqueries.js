@@ -5,8 +5,13 @@ PROJECT: productsAPI;
 (c) 2025 Lance Stubblefield
 --------------------------------------- */
 
-const Pool = require("pg").Pool;
-require("dotenv").config();
+import pkg from 'pg';
+const {Pool} = pkg;
+
+
+import {config} from "dotenv";
+
+config();
 
 console.log(process.env.DB_NAME)
 const pool = new Pool({
@@ -14,7 +19,7 @@ const pool = new Pool({
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+    port: process.env.DB_PORT || 5372,
 });
 
 // function generateUUID() {
@@ -74,7 +79,7 @@ const querySelect = {
 
 
 // ---------------------------------------------------- LISTS ----------------------------------------------------
-const listStuff = async (arg) => {
+const listStuff = async (arg ) => {
     try {
         return await new Promise(function (resolve, reject) {
             pool.query(arg, (error, results) => {
@@ -123,7 +128,7 @@ const getDetails = (id) => {
     const prodDetails = getItem(querySelect.select.showProduct, id)
     const prodOptions = getItem(querySelect.select.showProductOptions, id)
     return Promise.all([prodDetails, prodOptions]).then(results => {
-        // @ts-ignore
+        // @ts-expect-error - i don't know
         return Promise.all(results[1].map(option =>
             getItem(querySelect.select.showOptItems, option.optid).then(optItems => {
                     return {
@@ -138,6 +143,7 @@ const getDetails = (id) => {
         )).then(options => {
             console.log(results[0])
             return {
+                // @ts-expect-error - i don't know
                 ...results[0][0],
                 "options": options
             }
@@ -152,7 +158,7 @@ const getCartItem = (id) => getItem(querySelect.select.getCartItem, id)
 
 // #############################################################################################
 
-module.exports = {
+export default {
     listProducts,
     listCategories,
     listSubcats,
