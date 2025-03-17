@@ -4,10 +4,9 @@ elynors-api: routes/api/products.ts
 -------------------------------------------- */
 
 import express from 'express';
-
 import productQueries from "../products/productqueries.js";
-
 const products = express.Router();
+
 
 // -------------------------------------------- GET --------------------------------------------
 
@@ -17,7 +16,6 @@ products.get('/', (req, res) => {
             productQueries.listProducts()
                 .then(response => {
                     res.status(200).send(response);
-                    if (debug) console.log(response)
                 })
                 .catch(error => {
                     res.status(500).send(error);
@@ -27,7 +25,6 @@ products.get('/', (req, res) => {
             productQueries.listCategories()
                 .then(response => {
                     res.status(200).send(response);
-                    if (debug) console.log(response)
                 })
                 .catch(error => {
                     res.status(500).send(error);

@@ -10,9 +10,7 @@ const debug = false
 
 import pkg from 'pg';
 const {Pool} = pkg;
-
 import {config} from "dotenv";
-
 config();
 
 if (debug) console.log("connected: ", process.env.DB_NAME)

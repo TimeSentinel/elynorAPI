@@ -4,12 +4,10 @@ elynors-api: routes/api/themes.ts
 -------------------------------------------- */
 
 // ------------------- DEBUG ------------------
-const debug = true
+const debug = false
 
 import express from 'express';
-
 import themeQueries from "../themes/themequeries.js";
-
 const themes = express.Router();
 
 // --------------------------------------------------------------------------------------

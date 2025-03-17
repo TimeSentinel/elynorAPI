@@ -6,7 +6,7 @@ PROJECT: productsAPI;
 --------------------------------------- */
 
 // ------------------- DEBUG ------------------
-const debug = true
+const debug = false
 
 import pkg from 'pg';
 const {Pool} = pkg;

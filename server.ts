@@ -9,16 +9,18 @@ dotenv.config();
 import express from "express";
 const app = express();
 
+import cookieParser from "cookie-parser";
+
 import users from "./routes/api/users.js"
 import products from "./routes/api/products.js"
 import themes from "./routes/api/themes.js"
 import news from "./routes/api/news.js"
 import gallery from "./routes/api/gallery.js"
 
-// app.get('/', (req, res) =>
-//     res.send("Welcome to Elynor's Website!") )
-
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
+
 app.use(function (req, res, next) {
     const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
     const origin = req.headers.origin || "";

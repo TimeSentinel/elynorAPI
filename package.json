@@ -6,21 +6,25 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "nodemon server.ts",
     "lint": "next lint"
   },
   "dependencies": {
+    "@sequelize/postgres": "^7.0.0-alpha.45",
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "next": "15.2.2",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "pg": "^8.14.0",
+    "pg": "^8.14.1",
+    "pg-hstore": "^2.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "sequelize": "^6.37.6",
     "ts-node": "^10.9.2",
     "uuid": "^11.1.0",
     "validator": "^13.12.0"
@@ -28,6 +32,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
     "@types/node": "^20",
     "@types/pg": "^8.11.11",
