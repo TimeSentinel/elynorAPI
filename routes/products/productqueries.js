@@ -5,15 +5,18 @@ PROJECT: productsAPI;
 (c) 2025 Lance Stubblefield
 --------------------------------------- */
 
+// ------------------- DEBUG ------------------
+const debug = false
+
 import pkg from 'pg';
 const {Pool} = pkg;
-
 
 import {config} from "dotenv";
 
 config();
 
-console.log(process.env.DB_NAME)
+if (debug) console.log("connected: ", process.env.DB_NAME)
+
 const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -22,10 +25,6 @@ const pool = new Pool({
     port: process.env.DB_PORT || 5372,
 });
 
-// function generateUUID() {
-//     const crypto = require("crypto");
-//     return crypto.randomUUID();
-// }
 
 const querySelect = {
     select: {
@@ -77,9 +76,8 @@ const querySelect = {
     }
 }
 
-
 // ---------------------------------------------------- LISTS ----------------------------------------------------
-const listStuff = async (arg ) => {
+const listProductCatalog = async (arg ) => {
     try {
         return await new Promise(function (resolve, reject) {
             pool.query(arg, (error, results) => {
@@ -120,9 +118,9 @@ const getItem = async (arg, id) => {
 }
 
 
-const listCategories = () => listStuff(querySelect.select.listCategories)
-const listProducts = () => listStuff(querySelect.select.listProducts)
-const listSubcats = () => listStuff(querySelect.select.listSubcats)
+const listCategories = () => listProductCatalog(querySelect.select.listCategories)
+const listProducts = () => listProductCatalog(querySelect.select.listProducts)
+const listSubcats = () => listProductCatalog(querySelect.select.listSubcats)
 
 const getDetails = (id) => {
     const prodDetails = getItem(querySelect.select.showProduct, id)

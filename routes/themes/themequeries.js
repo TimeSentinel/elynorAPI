@@ -6,25 +6,32 @@ PROJECT: productsAPI;
 --------------------------------------- */
 
 // ------------------- DEBUG ------------------
-const debug = false
+const debug = true
 
-const Pool = require("pg").Pool;
-require("dotenv").config();
+import pkg from 'pg';
+const {Pool} = pkg;
+
+import {config} from "dotenv";
+
+// import crypto from "crypto";
+
+config();
+
+if (debug) console.log("connected: ", process.env.DB_NAME)
 
 const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+    port: process.env.DB_PORT || 5372,
 });
 
-function generateUUID() {
-    const crypto = require("crypto");
-    const newUUID = crypto.randomUUID();
-    if (debug) console.log("UUID: " + newUUID);
-    return newUUID;
-}
+// function generateUUID() {
+//     const newUUID = crypto.randomUUID();
+//     if (debug) console.log("UUID: " + newUUID);
+//     return newUUID;
+// }
 
 const querySelect = {
     select: {
@@ -63,9 +70,11 @@ const listThemes = async () => {
         throw new Error("Internal server error");
     }
 };
+
 const getThemeByID = async (id) => {
     try {
         return await new Promise(function (resolve, reject) {
+            if (debug) console.log("themeByID: ", querySelect.select.getTheme)
             pool.query(querySelect.select.getTheme, [id], (error, results) => {
                 if (error) {
                     reject(error);
@@ -84,11 +93,9 @@ const getThemeByID = async (id) => {
 };
 
 
-
-
 // #############################################################################################
 
-module.exports = {
+export default{
     listThemes,
     getThemeByID
 };

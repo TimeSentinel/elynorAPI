@@ -4,15 +4,10 @@ elynors-api: routes/api/products.ts
 -------------------------------------------- */
 
 import express from 'express';
-// const app = express();
 
 import productQueries from "../products/productqueries.js";
 
 const products = express.Router();
-// products.get("/", async (req, res) => {
-//     res.send(":::PRODUCTS:::")
-// })
-
 
 // -------------------------------------------- GET --------------------------------------------
 
