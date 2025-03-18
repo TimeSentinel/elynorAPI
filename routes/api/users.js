@@ -4,12 +4,14 @@ elynors-api: routes/api/users.ts
 -------------------------------------------- */
 
 import express from 'express';
-import {UserSchema as user} from "../../models/User.ts";
 import bcrypt from "bcryptjs";
-import { Sequelize} from "@sequelize/core";
-import { PostgresDialect } from "@sequelize/postgres";
+import {DataTypes, Sequelize} from "@sequelize/core";
+import {PostgresDialect} from "@sequelize/postgres";
+import models from "../../Models/userModel.js";
 
 const users = express.Router();
+
+//create connection
 const sequelize = new Sequelize({
     dialect: PostgresDialect,
     host: process.env.DB_HOST,
@@ -18,6 +20,20 @@ const sequelize = new Sequelize({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD
 });
+
+//test connection
+sequelize.authenticate().then(() => {
+    console.log("Database authenticated");
+}).catch((err) => {
+    console.log(err);
+})
+
+const db = {}
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+//connect to model
+db.users = models (sequelize, DataTypes)
 
 users.get('/test', (req, res) => res.json({msg: 'Users Works'}))
 
