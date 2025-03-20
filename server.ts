@@ -16,8 +16,10 @@ import products from "./routes/api/products.js"
 import themes from "./routes/api/themes.js"
 import news from "./routes/api/news.js"
 import gallery from "./routes/api/gallery.js"
+import bodyParser from "body-parser";
 
 app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 

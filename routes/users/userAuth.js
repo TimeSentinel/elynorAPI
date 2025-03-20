@@ -3,13 +3,9 @@
 elynors-api: routes/users/userAuth.js
 -------------------------------------------- */
 
-
-import express from "express";
-import db from "../../Models";
+import db from "../../Models/index.js";
 const User = db.users;
 
-//Function to check if username or email already exist in the database
-//this is to avoid having two users with the same username and email
 const saveUser = async (req, res, next) => {
     //search the database to see if user exist
     try {
@@ -20,19 +16,19 @@ const saveUser = async (req, res, next) => {
         });
         //if username exist in the database respond with a status of 409
         if (username) {
-            return res.json(409).send("username already taken");
+            return res.json(409).send("Username already taken");
         }
 
         //checking if email already exist
         const emailcheck = await User.findOne({
             where: {
-                email: req.body.email,
+                userEmail: req.body.email,
             },
         });
 
         //if email exist in the database respond with a status of 409
         if (emailcheck) {
-            return res.json(409).send("Authentication failed");
+            return res.json(409).send("Email already registered");
         }
 
         next();
@@ -41,8 +37,4 @@ const saveUser = async (req, res, next) => {
     }
 };
 
-//exporting module
-module.exports = {
-    saveUser,
-};
-
+export default saveUser;

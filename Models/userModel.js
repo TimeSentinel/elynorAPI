@@ -6,7 +6,13 @@ elynors-api: Models/userModel.js
 
 export default (sequelize, DataTypes) => {
     return sequelize.define(
-        "NewUser", {
+        "user", {
+            userID: {
+                type: DataTypes.UUID,
+                primaryKey: true,
+                unique: true,
+                allowNull: false,
+            },
             userName: {
                 type: DataTypes.STRING,
                 allowNull: false,
@@ -23,7 +29,14 @@ export default (sequelize, DataTypes) => {
             userPermissions: {
                 type: DataTypes.ARRAY(DataTypes.STRING),
             },
+            userActive: {
+                type: DataTypes.FLOAT,
+            }
         }, {
-            tableName: "accounts.users",
+            schema: "accounts",
+            tableName: "users",
+            timestamps: false,
+            createdAt: false,
+            updatedAt: false,
         });
 }

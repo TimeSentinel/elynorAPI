@@ -6,23 +6,26 @@ elynors-api: Models/index.js
 //importing modules
 import {DataTypes, Sequelize} from "sequelize";
 import userModel from "./userModel.js";
-import {PostgresDialect} from "@sequelize/postgres";
+import dotenv from "dotenv";
+dotenv.config();
 
 
 const sequelize = new Sequelize({
-    dialect: PostgresDialect,
+    dialect: "postgres",
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     database: process.env.DB_NAME,
-    user: process.env.DB_USER,
+    username: process.env.DB_USER,
     password: process.env.DB_PASSWORD
 });
 
 //checking if connection is done
 sequelize.authenticate().then(() => {
-    console.log(`Database connected to discover`)
+    console.log(`victorius is plugged in`)
 }).catch((err) => {
-    console.log(err)
+    console.log("THERE IS NO LANCE", err)
+    console.log("user: ", process.env.DB_USER);
+    console.log(sequelize);
 })
 
 const db = {}
@@ -33,4 +36,4 @@ db.sequelize = sequelize
 db.users = userModel (sequelize, DataTypes)
 
 //exporting the module
-module.exports = db
+export default db;
