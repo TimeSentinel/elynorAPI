@@ -31,12 +31,15 @@ export default (sequelize, DataTypes) => {
             },
             userActive: {
                 type: DataTypes.FLOAT,
+            },
+            userLastAccess: {
+                type: DataTypes.DATE,
             }
         }, {
             schema: "accounts",
             tableName: "users",
-            timestamps: false,
-            createdAt: false,
+            // timestamps: false,
+            createdAt: true,
             updatedAt: false,
         });
 }

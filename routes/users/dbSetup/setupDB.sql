@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS accounts.users
     "userEmail" character varying(100) COLLATE pg_catalog."default" NOT NULL UNIQUE,
     "userPermissions" character varying(255)[] COLLATE pg_catalog."default",
     "userActive" numeric(1,0) DEFAULT 1,
-    "userCreateDate" date NOT NULL DEFAULT CURRENT_DATE,
+    "createdAt" date NOT NULL DEFAULT CURRENT_DATE,
+    "userLastActive" date,
     CONSTRAINT "userID" PRIMARY KEY ("userID")
     )
 

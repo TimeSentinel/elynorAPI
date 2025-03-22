@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import db from "../../Models/index.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const User = db.users;
@@ -14,7 +15,7 @@ const User = db.users;
 // New User
 const signup = async (req, res) => {
     try {
-        const { userName, email, password, permissions } = req.body;
+        const {userName, email, password, permissions} = req.body;
 
         const data = {
             userID: crypto.randomUUID(),
@@ -27,10 +28,10 @@ const signup = async (req, res) => {
         const user = await User.create(data);
 
         if (user) {
-            let token = jwt.sign({ id: user.userID }, process.env.secretKey, {
+            let token = jwt.sign({id: user.userID}, process.env.secretKey, {
                 expiresIn: process.env.EXPIRES
             });
-            res.cookie("jwt", token, { maxAge: process.env.EXPIRES, httpOnly: true });
+            res.cookie("jwt", token, {maxAge: process.env.EXPIRES, httpOnly: true});
             console.log("user", JSON.stringify(user, null, 2));
             console.log(token);
             //send users details
@@ -46,34 +47,48 @@ const signup = async (req, res) => {
 
 //Authentication
 const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findOne({
-            where: {
-                userEmail: email
-            }
-        });
-        console.log(user);
-        if (user) {
-            const isSame = await bcrypt.compare(password, user.userPassword);
-
-            if (isSame) {
-                let token = jwt.sign({ id: user.userID }, process.env.SECRETKEY, {
-                    expiresIn: process.env.EXPIRES,
-                });
-                res.cookie("jwt", token, { maxAge: process.env.EXPIRES, httpOnly: true });
-                console.log("user", JSON.stringify(user, null, 2));
-                console.log(token);
-                //send user data
-                return res.status(201).send(user);
+    const {email, password} = req.body;
+    if (!email || !password) {
+        return res.status(400).send("Please enter email AND password");
+    } else {
+        try {
+            const user = await User.findOne({
+                where: {
+                    userEmail: email
+                }
+            });
+            if (user) {
+                const isSame = await bcrypt.compare(password, user.userPassword);
+                if (isSame) {
+                    let token = jwt.sign({id: user.userID}, process.env.SECRETKEY, {
+                        expiresIn: process.env.EXPIRES,
+                    });
+                    res.cookie("jwt", token, {maxAge: process.env.EXPIRES, httpOnly: true});
+                    console.log(`User ${user.userName} logged in at ${Date.now().toString()}`);
+                    console.log(token);
+                    if (user.userActive === "1") {
+                        const userData = {
+                            userID: user.userID,
+                            userName: user.userName,
+                            userEmail: user.userEmail,
+                            userPermissions: user.userPermissions,
+                            userLastAccess: user.userLastAccess
+                        }
+                        user.userLastAccess = Date.now();
+                        await user.save();
+                        return res.status(201).send(userData);
+                    } else {
+                        return res.status(409).send("Inactive user");
+                    }
+                } else {
+                    return res.status(401).send("Authentication failed");
+                }
             } else {
-                return res.status(401).send("Authentication failed");
+                return res.status(401).send("No Account Found");
             }
-        } else {
-            return res.status(401).send("Authentication failed");
+        } catch (error) {
+            console.log(error);
         }
-    } catch (error) {
-        console.log(error);
     }
 };
 
