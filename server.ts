@@ -10,13 +10,13 @@ import express from "express";
 const app = express();
 
 import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 
 import users from "./routes/api/users.js"
 import products from "./routes/api/products.js"
 import themes from "./routes/api/themes.js"
 import news from "./routes/api/news.js"
 import gallery from "./routes/api/gallery.js"
-import bodyParser from "body-parser";
 
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 
 app.use(function (req, res, next) {
-    const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+    const allowedOrigins = [process.env.ORIGINS];
     const origin = req.headers.origin || "";
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
@@ -38,12 +38,12 @@ app.get('/', (req, res) => {
                     res.status(200).send("Welcome to Elynor's Website");
     })
 
-app.use("/users", users);
-app.use("/products", products);
-app.use("/themes", themes);
-app.use("/news", news);
-app.use("/gallery", gallery);
-
+if (process.env.USERS) app.use("/users", users);
+if (process.env.PRODUCTS) app.use("/products", products);
+if (process.env.THEMES) app.use("/themes", themes);
+if (process.env.NEWS) app.use("/news", news);
+if (process.env.GALLERY) app.use("/gallery", gallery);
+// if (process.env.ACCOUNTS) app.use("/accounts", accounts);
 
 const port = process.env.PORT || 3000;
 

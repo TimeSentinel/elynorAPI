@@ -4,7 +4,7 @@ elynors-api: routes/users/userController.js
 -------------------------------------------- */
 
 import bcrypt from "bcrypt";
-import db from "../../Models/index.js";
+import db from "./Models/index.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
@@ -12,23 +12,24 @@ dotenv.config();
 
 const User = db.users;
 
-// New User
-const signup = async (req, res) => {
+// ------------- Register User -------------
+const register = async (req, res) => {
     try {
-        const {userName, email, password, permissions} = req.body;
-
+        const {name, email, password, permissions} = req.body;
+        console.log(permissions);
         const data = {
             userID: crypto.randomUUID(),
-            userName: userName,
+            userName: name,
             userEmail: email,
             userPassword: await bcrypt.hash(password, 10),
-            userPermissions: permissions,
+            userPermissions: (permissions.toString().split(",")),
+            userActive: 1,
+            userLastAccess: Date.now(),
         };
-
         const user = await User.create(data);
 
         if (user) {
-            let token = jwt.sign({id: user.userID}, process.env.secretKey, {
+            let token = jwt.sign({id: user.userID}, process.env.SECRETKEY, {
                 expiresIn: process.env.EXPIRES
             });
             res.cookie("jwt", token, {maxAge: process.env.EXPIRES, httpOnly: true});
@@ -44,8 +45,7 @@ const signup = async (req, res) => {
     }
 };
 
-
-//Authentication
+// ------------- Authentication -------------
 const login = async (req, res) => {
     const {email, password} = req.body;
     if (!email || !password) {
@@ -93,6 +93,6 @@ const login = async (req, res) => {
 };
 
 export {
-    signup,
+    register,
     login,
 }

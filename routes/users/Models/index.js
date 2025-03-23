@@ -9,7 +9,6 @@ import userModel from "./userModel.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-
 const sequelize = new Sequelize({
     dialect: "postgres",
     host: process.env.DB_HOST,
@@ -24,7 +23,6 @@ sequelize.authenticate().then(() => {
     console.log(`victorius is plugged in`)
 }).catch((err) => {
     console.log("THERE IS NO LANCE", err)
-    console.log("user: ", process.env.DB_USER);
     console.log(sequelize);
 })
 
