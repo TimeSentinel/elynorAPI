@@ -102,9 +102,11 @@ const login = async (req, res) => {
 const update = async (req, res) => {
     try {
         const {id, name, email, permissions, active} = req.body;
-        if (!validator.isEmail(req.body.email)) res.status(409).send("Invalid email address");
-        const username = await User.findOne({where: {userName: req.body.name,}});
+        if (!validator.isEmail(email)) res.status(409).send("Invalid email address");
+        const username = await User.findOne({where: {userName: name,}});
         if (username) return res.status(409).send("Username already taken");
+        if (!validator.matches(name, '^[a-zA-Z_.-]*$'))
+            return res.status(400).send("userName must contain only letters");
         const user = await User.findOne({where: {userID: id},});
         user.userName = name;
         user.userEmail = email;
@@ -120,7 +122,7 @@ const update = async (req, res) => {
 const userupdate = async (req, res) => {
     try {
         const {id, password, password2, email} = req.body;
-        if (password !== password2) return res.status(400).send("Passwords do not match");
+        if (!validator.equals(password, password2)) return res.status(400).send("Passwords do not match");
         if (!validator.isLength(password, {min: 8, max: 16}))
             return res.status(400).send("Password must be between 8 and 16 characters");
         if (!validator.isEmail(req.body.email)) res.status(409).send("Invalid email address");
